@@ -1138,24 +1138,51 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <script>
   const rickRollUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
 
-  // Target all <button> elements
-  document.querySelectorAll('button').forEach(button => {
-    button.addEventListener('click', function(e) {
-      e.preventDefault(); // Stop any original action
-      window.location.href = rickRollUrl; // Redirect to Rick Roll
-    });
-  });
 
-  // Optional: Also target input buttons (like <input type="submit"> or <input type="button">)
-  document.querySelectorAll('input[type="button"], input[type="submit"], input[type="reset"]').forEach(input => {
-    input.addEventListener('click', function(e) {
-      e.preventDefault();
-      window.location.href = rickRollUrl;
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const rickRollUrl = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+
+    // Function to rickroll a single button/element
+    function rickRollButton(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation(); // Stops any parent handlers
+        window.location.href = rickRollUrl;
+      });
+    }
+
+    // Rickroll all buttons that exist right now
+    document.querySelectorAll('button, input[type="button"], input[type="submit"], input[type="reset"]').forEach(rickRollButton);
+
+    // Watch for new buttons added dynamically
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === 1) { // It's an element
+            // If the added node itself is a button
+            if (node.matches('button, input[type="button"], input[type="submit"], input[type="reset"]')) {
+              rickRollButton(node);
+            }
+            // If it contains buttons inside
+            node.querySelectorAll('button, input[type="button"], input[type="submit"], input[type="reset"]').forEach(rickRollButton);
+          }
+        });
+      });
+    });
+
+    // Start observing the entire body for changes
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
     });
   });
+</script>
 </script>
 </body>
 
 <!-- Mirrored from therealworld.net/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 31 Dec 2025 03:58:57 GMT -->
 </html>
+
 
